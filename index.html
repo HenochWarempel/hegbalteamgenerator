@@ -1,43 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hegbal Teamgenerator</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Voeg de volgende stijl toe om de update tekst te centreren en kleiner te maken */
         footer {
             text-align: center;
             font-size: small;
-            margin-top: 20px; /* Voeg wat ruimte toe boven de tekst */
+            margin-top: 40px;
+            color: #6B7280;
         }
     </style>
-    <title>Hegbal-teamgenerator</title>
 </head>
 <body>
-    <header>
-        <h1>⚽ Hegbal-teamgenerator ⚽</h1>
-    </header>
-    <main>
-        <section class="player-list">
-            <h2>Die hards:</h2>
-            <div id="dieHards"></div>
-            <h2>Bankzitters:</h2>
-            <div id="benchWarmers"></div>
-            <button id="formTeams">Vorm teams</button>
-        </section>
-        <h2>Deelnemers:</h2>
-        <div id="participants"></div>
-        <section class="team-list">
-            <h2>Teams:</h2>
-            <div id="team1"></div>
-            <div id="team2"></div>
-        </section>
-        <button id="generateAgain">Genereer opnieuw</button>
-    </main>
-    <footer>
-        Update: mei 2025
-    </footer>
-    <script src="script.js"></script>
+<header>
+    <h1>🏆 Hegbal Teamgenerator</h1>
+    <p>Maak teams voor je Hegbal-spelers!</p>
+</header>
+
+<main>
+    <section class="player-list">
+        <h2>Die Hards</h2>
+        <div id="dieHards" class="player-container"></div>
+
+        <h2>Bankzitters</h2>
+        <div id="benchWarmers" class="player-container"></div>
+
+        <button id="formTeams">🔁 Genereer Teams</button>
+        <button id="clearSelection">Wis Selectie</button>
+
+        <h2>Teams</h2>
+        <div id="team1"></div>
+        <div id="team2"></div>
+    </section>
+</main>
+
+<footer>
+    Laatste update: mei 2025 &middot; Gemaakt met 💚 door het Hegbal-team
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>

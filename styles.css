@@ -1,26 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;700&family=Orbitron:wght@700&display=swap');
+
+:root {
+    /* Kleurenpalet - Hegebal Arcade Groen & Cyaan */
+    --primary-hegebal-dark: #004d40;        /* Diep donkergroen (basis) */
+    --primary-hegebal-medium: #1A5246;      /* Iets lichter donkergroen voor diepte */
+    --primary-hegebal-light: #4caf50;       /* Helder groen (accent van website) */
+    --bg-tech-dark: #0A1210;                /* Zeer donker, bijna zwartgroen (basis achtergrond) */
+    --bg-tech-medium: #182520;              /* Iets lichter groen voor modules */
+    --glow-lime-bright: #BFFF00;            /* Fel, elektrisch limoengroen (hoofd gloed) */
+    --glow-cyan-electric: #00FFFF;          /* Levendig cyaan (secundaire gloed/accent) */
+    --text-main: #E0F7FA;                   /* Koel wit/lichtblauw voor leesbaarheid */
+    --text-accent: #A7FFEB;                 /* Zachte cyaan voor details */
+    --border-action-green: #6AFF66;         /* Actief groen voor randen */
+    --danger-color: #FF7043;                /* Warm oranje voor waarschuwingen */
+
+    --shadow-tech-pop: 6px 6px 0px rgba(0, 0, 0, 0.5); /* Meer uitgesproken, fun schaduw */
+    --glow-effect-strong: 0 0 20px var(--glow-lime-bright), 0 0 35px var(--glow-lime-bright), 0 0 60px rgba(191, 255, 0, 0.7); /* Extra sterke, brede gloed */
+    --glow-effect-subtle: 0 0 10px var(--glow-lime-bright), 0 0 15px rgba(191, 255, 0, 0.4); /* Subtiele gloed */
+    --radius-round: 10px;                   /* Net iets ronder dan scherp, maar niet zacht */
+    --transition-bouncy: 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bouncy effect */
+    --transition-fast: 0.1s linear;         /* Snelle, directe respons */
+
+    /* Typografie - Arcade Speels & Tech */
+    --font-heading: 'Press Start 2P', cursive; /* Iconisch arcade-font */
+    --font-subheading: 'Orbitron', sans-serif; /* Strak, modern tech-font */
+    --font-body: 'Space Grotesk', sans-serif;   /* Moderne, geometrische sans-serif voor leesbaarheid */
+}
+
+/* Reset Box Model */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-body);
     margin: 0;
     padding: 0;
+    background-color: var(--bg-tech-dark);
+    color: var(--text-main);
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+    /* Dynamische achtergrond met pulserende lichteffecten - nu in groen/cyaan */
+    background-image:
+            radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.05) 0%, transparent 80%),
+            radial-gradient(circle at 90% 80%, rgba(191, 255, 0, 0.05) 0%, transparent 80%),
+            linear-gradient(rgba(0, 255, 150, 0.03) 1px, transparent 1px), /* Lichte groene lijnen */
+            linear-gradient(90deg, rgba(0, 255, 150, 0.03) 1px, transparent 1px);
+    background-size: 80% 80%, 80% 80%, 25px 25px, 25px 25px;
 }
 
 header, main {
-    padding: 20px;
+    padding: 45px 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 h1 {
+    font-family: var(--font-heading);
     text-align: center;
+    margin-bottom: 60px;
+    font-size: 3.8rem;
+    text-transform: uppercase;
+    color: var(--glow-lime-bright); /* Hoofdtitel in stuiterend limoengroen */
+    letter-spacing: 8px;
+    font-weight: 700;
+    position: relative;
+    text-shadow: var(--glow-effect-strong);
+    animation: neon-pulse-strong 1.2s ease-in-out infinite alternate;
+    line-height: 1.1;
 }
 
-.player-list, .team-list {
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
+@keyframes neon-pulse-strong {
+    0%, 100% { text-shadow: 0 0 15px var(--glow-lime-bright), 0 0 25px var(--glow-lime-bright), 0 0 40px rgba(191, 255, 0, 0.6); }
+    50% { text-shadow: 0 0 25px var(--glow-lime-bright), 0 0 45px var(--glow-lime-bright), 0 0 80px rgba(191, 255, 0, 0.9); }
 }
 
-.player-list h2, .team-list h2 {
+p {
+    text-align: center;
+    font-size: 1.15rem;
+    color: var(--text-accent); /* Accentkleur voor alinea's (cyaan) */
+    max-width: 800px;
+    margin: 0 auto 60px auto;
+    font-family: var(--font-body);
+}
+
+.player-list,
+.team-list-container {
+    background: var(--bg-tech-medium); /* Iets lichter groen dan body bg */
+    border: 2px solid var(--border-action-green); /* Heldergroene rand */
+    border-radius: var(--radius-round);
+    padding: 35px;
+    box-shadow: var(--shadow-tech-pop);
+    margin-bottom: 40px;
+    transition: transform var(--transition-bouncy), box-shadow var(--transition-bouncy);
+    position: relative;
+    overflow: hidden;
+}
+
+.player-list:hover,
+.team-list-container:hover {
+    transform: translateY(-10px) rotate(-2deg);
+    box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.6), 0 0 20px var(--glow-cyan-electric); /* Diepere schaduw + cyaan gloed */
+}
+
+/* Dynamische hoeklijnen - pulserend (nu tussen groen en cyaan) */
+.player-list::before, .player-list::after,
+.team-list-container::before, .team-list-container::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--glow-lime-bright); /* Dikkere, gloeiende lijnen */
+    animation: corner-glow-green-cyan 1.5s infinite alternate; /* Pulserende animatie op hoeken */
+}
+
+@keyframes corner-glow-green-cyan {
+    from { border-color: var(--glow-lime-bright); box-shadow: 0 0 5px var(--glow-lime-bright); }
+    to { border-color: var(--glow-cyan-electric); box-shadow: 0 0 15px var(--glow-cyan-electric); }
+}
+
+.player-list::before, .team-list-container::before {
+    top: -2px; left: -2px;
+    border-right: none;
+    border-bottom: none;
+}
+.player-list::after, .team-list-container::after {
+    bottom: -2px; right: -2px;
+    border-left: none;
+    border-top: none;
+}
+
+
+.player-list h2,
+.team-list h2 {
+    font-family: var(--font-subheading);
     margin-top: 0;
+    font-size: 2rem;
+    color: var(--primary-hegebal-light); /* Helder groen */
+    border-bottom: 3px dashed var(--glow-cyan-electric); /* Dikke gestippelde cyaan lijn */
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.6); /* Zachte cyaan gloed */
 }
 
 ul {
@@ -29,70 +155,231 @@ ul {
 }
 
 li {
-    margin-bottom: 5px;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    position: relative;
+    padding-left: 30px;
+}
+
+li::before {
+    content: '>>';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--glow-lime-bright); /* Limoengroene pijlen */
+    font-family: var(--font-heading);
+    font-size: 0.8em;
+    animation: bounce-bullet 1s infinite alternate;
+}
+
+@keyframes bounce-bullet {
+    from { transform: translateY(0); }
+    to { transform: translateY(-3px); }
+}
+
+.team-display-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 20px;
+    justify-content: center;
 }
 
 #team1, #team2 {
-    display: inline-block;
-    width: 45%;
-    vertical-align: top;
-    padding: 10px;
-    border: 1px solid #ccc;
-    margin-top: 10px;
-    border-radius: 5px;
+    flex: 1 1 45%;
+    min-width: 340px;
+    padding: 35px;
+    border: 2px solid var(--border-action-green); /* Heldergroene rand */
+    background-color: var(--bg-tech-medium);
+    border-radius: var(--radius-round);
+    box-shadow: var(--shadow-tech-pop);
+    min-height: 300px;
+    transition: transform var(--transition-bouncy), box-shadow var(--transition-bouncy);
+    position: relative;
+    overflow: hidden;
 }
 
-.button {
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
+#team1:hover, #team2:hover {
+    transform: translateY(-10px) rotate(2deg);
+    box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.6), 0 0 20px var(--glow-cyan-electric); /* Diepere schaduw + cyaan gloed */
+}
+
+/* Knoppen - Algemeen */
+.button, .player-button, #formTeams, #clearSelection, #generateAgain {
+    font-family: var(--font-subheading);
+    font-size: 19px;
+    border: 3px solid var(--glow-lime-bright); /* Dikkere, gloeiende limoengroene rand */
+    border-radius: var(--radius-round);
+    padding: 15px 30px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    font-weight: 700;
+    text-transform: uppercase;
+    background-color: transparent;
+    color: var(--glow-lime-bright);
+    transition: all var(--transition-bouncy);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    outline: none;
+    z-index: 1;
+    box-shadow: 0 0 15px rgba(191, 255, 0, 0.6);
+    animation: button-idle-glow-lime 2s infinite alternate; /* Altijd subtiel gloeien (lime) */
 }
 
-.button:hover {
-    background-color: #1E88E5;
+@keyframes button-idle-glow-lime {
+    from { box-shadow: 0 0 10px rgba(191, 255, 0, 0.4); }
+    to { box-shadow: 0 0 20px rgba(191, 255, 0, 0.7); }
 }
 
-.player-button,
-.participant-name {
-    font-size: 16px;
+
+.button:hover,
+.player-button:hover,
+#formTeams:hover,
+#clearSelection:hover,
+#generateAgain:hover {
+    background-color: var(--glow-lime-bright);
+    color: var(--bg-tech-dark); /* Donkere tekst bij hover */
+    box-shadow: var(--glow-effect-strong);
+    transform: scale(1.05);
+    border-color: var(--glow-cyan-electric); /* Rand verandert naar cyaan */
+    animation: none; /* Stop idle glow, start hover glow */
 }
 
+/* Retro 'Charge' / Pulse effect op knoppen bij hover */
+.button::before, .player-button::before,
+#formTeams::before, #clearSelection::before, #generateAgain::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0.1)
+    );
+    opacity: 0;
+    transition: opacity 0.2s linear;
+    z-index: 2;
+    pointer-events: none;
+    animation: button-shine 1s infinite linear;
+    transform: translateX(-100%) skewX(-30deg);
+}
+
+@keyframes button-shine {
+    from { transform: translateX(-100%) skewX(-30deg); }
+    to { transform: translateX(100%) skewX(-30deg); }
+}
+
+.button:hover::before, .player-button:hover::before,
+#formTeams:hover::before, #clearSelection:hover::before, #generateAgain:hover::before {
+    opacity: 1;
+    animation-play-state: running;
+}
+
+
+/* Player Knoppen */
 .player-button {
-    margin-right: 10px;
-    margin-bottom: 10px;
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    background-color: var(--primary-hegebal-dark);
+    color: var(--glow-cyan-electric); /* Cyaan tekst */
+    border-color: var(--glow-cyan-electric);
+    margin: 10px;
+    display: inline-block;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+    animation: button-idle-glow-cyan 2s infinite alternate; /* Altijd subtiel gloeien (cyaan) */
+}
+
+@keyframes button-idle-glow-cyan {
+    from { box-shadow: 0 0 8px rgba(0, 255, 255, 0.3); }
+    to { box-shadow: 0 0 18px rgba(0, 255, 255, 0.6); }
+}
+
+.player-button:hover {
+    background-color: var(--glow-cyan-electric);
+    color: var(--bg-tech-dark);
+    box-shadow: 0 0 20px var(--glow-cyan-electric), 0 0 35px var(--glow-cyan-electric);
 }
 
 .player-button.selected {
-    background-color: #1E88E5;
+    background-color: var(--glow-lime-bright);
+    color: var(--bg-tech-dark);
+    border-color: var(--glow-lime-bright);
+    box-shadow: 0 0 15px var(--glow-lime-bright), 0 0 25px var(--glow-lime-bright);
 }
 
-
-#formTeams, #generateAgain {
-    background-color: #FF0000; /* Felrode achtergrond */
-    color: white; /* Witte tekst */
-    border-radius: 10px;
-    padding: 10px 20px;
+.participant-name {
+    display: inline-block;
+    background: var(--primary-hegebal-light); /* Heldergroene achtergrond */
+    border-radius: var(--radius-round);
+    padding: 10px 18px;
+    margin: 8px;
     cursor: pointer;
-    font-weight: bold; /* Maak de tekst bold */
-    border: none;
-    transition: background-color 0.3s;
-    margin-top: 20px; /* Voeg witruimte toe aan de bovenkant */
-
+    font-weight: 700;
+    transition: background-color var(--transition-fast), transform var(--transition-bouncy), box-shadow var(--transition-bouncy);
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--glow-cyan-electric); /* Cyaan rand */
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.1);
 }
 
-#formTeams:hover, #generateAgain:hover {
-    background-color: #FF3333; /* Lichtere rode kleur bij hover */
+.participant-name:hover {
+    background-color: var(--glow-cyan-electric); /* Cyaan bij hover */
+    color: var(--bg-tech-dark); /* Donkere tekst bij hover */
+    transform: scale(1.08) rotate(3deg);
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.4), 0 0 10px var(--glow-lime-bright); /* Diepere schaduw + limoengroene gloed */
 }
 
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap');
+#formTeams,
+#clearSelection,
+#generateAgain {
+    background-color: var(--primary-hegebal-dark);
+    color: var(--glow-lime-bright);
+    border-color: var(--glow-lime-bright);
+    margin-top: 35px;
+    margin-right: 15px;
+    letter-spacing: 2.5px;
+    box-shadow: 0 0 18px rgba(191, 255, 0, 0.7);
+}
+
+#formTeams:hover,
+#clearSelection:hover,
+#generateAgain:hover {
+    background-color: var(--glow-lime-bright);
+    color: var(--bg-tech-dark);
+    box-shadow: var(--glow-effect-strong);
+}
+
+/* Media Query voor basis responsiviteit (horizontaal scrollen op kleine schermen) */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2.5rem;
+        letter-spacing: 5px;
+    }
+
+    .team-display-wrapper {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+
+    #team1, #team2 {
+        flex-shrink: 0;
+        width: 320px;
+        margin-right: 20px;
+    }
+    #team2 { margin-right: 0; }
+
+    .button, .player-button, #formTeams, #clearSelection, #generateAgain {
+        display: block;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .player-button {
+        display: inline-block;
+        width: auto;
+    }
+}

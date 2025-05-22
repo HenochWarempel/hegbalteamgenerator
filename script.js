@@ -1,46 +1,39 @@
 const dieHardsList = document.getElementById('dieHards');
 const benchWarmersList = document.getElementById('benchWarmers');
-const participantsList = document.getElementById('participants');
 const team1Element = document.getElementById('team1');
 const team2Element = document.getElementById('team2');
 const formTeamsButton = document.getElementById('formTeams');
-const generateAgainButton = document.getElementById('generateAgain');
+const clearSelectionButton = document.getElementById('clearSelection');
 
 const players = [
-{ name: 'Bart', value: 5 },
-{ name: 'Danny', value: 2 },
-{ name: 'Gita', value: 2 },
-{ name: 'Henoch', value: 5 },
-{ name: 'Jaap', value: 4 },
-{ name: 'Jordie', value: 3 },
-{ name: 'Kevin', value: 4 },
-{ name: 'Koen', value: 6 },
-{ name: 'Laureen', value: 2 },
-{ name: 'Lars', value: 2 },
-{ name: 'Leander', value: 2 },
-{ name: 'Luc', value: 6 },
-{ name: 'Marc', value: 5 },
-{ name: 'Marije', value: 2 },
-{ name: 'Mark', value: 5 },
-{ name: 'Maud', value: 2 },
-{ name: 'Pascal', value: 2 },
-{ name: 'Remco', value: 3 },
-{ name: 'Sander', value: 3 },
-{ name: 'Simon', value: 6 },
-{ name: 'Tim', value: 5 },
-{ name: 'Tom', value: 4 },
+    { name: 'Bart', value: 5, type: 'benchWarmer' },
+    { name: 'Danny', value: 2, type: 'dieHard' },
+    { name: 'Gita', value: 2, type: 'benchWarmer' },
+    { name: 'Henoch', value: 5, type: 'dieHard' },
+    { name: 'Jaap', value: 4, type: 'benchWarmer' },
+    { name: 'Jordie', value: 3, type: 'dieHard' },
+    { name: 'Kevin', value: 4, type: 'benchWarmer' },
+    { name: 'Koen', value: 6, type: 'benchWarmer' },
+    { name: 'Laureen', value: 2, type: 'dieHard' },
+    { name: 'Lars', value: 2, type: 'dieHard' },
+    { name: 'Leander', value: 2, type: 'dieHard' },
+    { name: 'Luc', value: 6, type: 'benchWarmer' },
+    { name: 'Marc', value: 5, type: 'dieHard' },
+    { name: 'Marije', value: 2, type: 'benchWarmer' },
+    { name: 'Mark', value: 5, type: 'dieHard' },
+    { name: 'Maud', value: 2, type: 'dieHard' },
+    { name: 'Pascal', value: 2, type: 'benchWarmer' },
+    { name: 'Remco', value: 3, type: 'dieHard' },
+    { name: 'Sander', value: 3, type: 'benchWarmer' },
+    { name: 'Simon', value: 6, type: 'dieHard' },
+    { name: 'Tim', value: 5, type: 'dieHard' },
+    { name: 'Tom', value: 4, type: 'benchWarmer' },
 ];
 
 const selectedPlayers = new Set();
 const participantElements = new Map();
-
-const dieHards = [
-    'Danny', 'Henoch', 'Jordie', 'Lars', 'Laureen', 'Leander', 'Marc', 'Mark', 'Maud', 'Remco', 'Simon', 'Tim',
-];
-
-const benchWarmers = [
-    'Bart', 'Gita', 'Jaap', 'Kevin', 'Koen', 'Luc', 'Marije', 'Pascal', 'Sander', 'Tom',
-];
+let totalValueTeam1 = 0;
+let totalValueTeam2 = 0;
 
 function addPlayerToList(player, listElement) {
     const button = document.createElement('button');
@@ -64,7 +57,7 @@ function addPlayerToList(player, listElement) {
                 participantElements.delete(player.name);
                 button.classList.remove('selected');
             });
-            participantsList.appendChild(participantNameDiv);
+
             participantElements.set(player.name, participantNameDiv);
         } else {
             selectedPlayers.delete(player);
@@ -78,9 +71,9 @@ function addPlayerToList(player, listElement) {
 }
 
 players.forEach(player => {
-    if (dieHards.includes(player.name)) {
+    if (player.type === 'dieHard') {
         addPlayerToList(player, dieHardsList);
-    } else if (benchWarmers.includes(player.name)) {
+    } else if (player.type === 'benchWarmer') {
         addPlayerToList(player, benchWarmersList);
     } else {
         console.warn(`Speler ${player.name} niet gevonden in dieHards of benchWarmers lijsten en wordt niet getoond.`);
@@ -88,18 +81,22 @@ players.forEach(player => {
 });
 
 formTeamsButton.addEventListener('click', () => {
-    generateFairTeams();
+    generateFairTeams(Array.from(selectedPlayers));
 });
 
-generateAgainButton.addEventListener('click', () => {
-    generateFairTeams();
+clearSelectionButton.addEventListener('click', () => {
+    selectedPlayers.clear();
+    dieHardsList.querySelectorAll('.player-button').forEach(button => button.classList.remove('selected'));
+    benchWarmersList.querySelectorAll('.player-button').forEach(button => button.classList.remove('selected'));
+    team1Element.innerHTML = '';
+    team2Element.innerHTML = '';
+    totalValueTeam1 = 0;
+    totalValueTeam2 = 0;
 });
 
-function generateFairTeams() {
-    const selectedPlayersArray = Array.from(selectedPlayers);
-    const numPlayers = selectedPlayersArray.length;
 
-    if (numPlayers < 2) {
+function generateFairTeams(players) {
+    if (players.length < 2) {
         alert("Selecteer minimaal 2 spelers om teams te vormen.");
         return;
     }
@@ -108,33 +105,40 @@ function generateFairTeams() {
     let bestTeam2Players = [];
     let bestDifference = Infinity;
 
-    const iterations = 5000;
+    let bestTotalValueTeam1 = 0;
+    let bestTotalValueTeam2 = 0;
 
-    const team1Size = Math.floor(numPlayers / 2);
-    // const team2Size = numPlayers - team1Size; // Niet expliciet nodig verderop, slice doet het werk
+    const MAX_ITERATIONS = 5000;
+    const team1Size = Math.floor(players.length / 2);
 
-    for (let i = 0; i < iterations; i++) {
-        const shuffledPlayers = shuffleArray(selectedPlayersArray.slice());
+    for (let i = 0; i < MAX_ITERATIONS; i++) {
+        const SHUFFLED_PLAYERS = shuffleArray(players.slice());
+        const CURRENT_TEAM_1 = SHUFFLED_PLAYERS.slice(0, team1Size);
+        const CURRENT_TEAM_2 = SHUFFLED_PLAYERS.slice(team1Size);
 
-        const currentTeam1 = shuffledPlayers.slice(0, team1Size);
-        const currentTeam2 = shuffledPlayers.slice(team1Size);
+        const CURRENT_VALUE_1 = calculateTotalValue(CURRENT_TEAM_1);
+        const CURRENT_VALUE_2 = calculateTotalValue(CURRENT_TEAM_2);
+        const CURRENT_DIFFERENCE = Math.abs(CURRENT_VALUE_1 - CURRENT_VALUE_2);
 
-        const team1TotalValue = calculateTotalValue(currentTeam1);
-        const team2TotalValue = calculateTotalValue(currentTeam2);
-        const currentDifference = Math.abs(team1TotalValue - team2TotalValue);
-
-        if (currentDifference < bestDifference) {
-            bestDifference = currentDifference;
-            bestTeam1Players = currentTeam1;
-            bestTeam2Players = currentTeam2;
+        if (CURRENT_DIFFERENCE < bestDifference) {
+            bestDifference = CURRENT_DIFFERENCE;
+            bestTeam1Players = CURRENT_TEAM_1;
+            bestTeam2Players = CURRENT_TEAM_2;
+            bestTotalValueTeam1 = CURRENT_VALUE_1;
+            bestTotalValueTeam2 = CURRENT_VALUE_2;
 
             if (bestDifference === 0) {
                 break;
             }
         }
     }
+
+    totalValueTeam1 = bestTotalValueTeam1;
+    totalValueTeam2 = bestTotalValueTeam2;
+
     displayTeams(bestTeam1Players, bestTeam2Players);
 }
+
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -144,7 +148,7 @@ function shuffleArray(array) {
     return array;
 }
 
-function calculateTotalValue(teamPlayers) { // Renamed parameter for clarity
+function calculateTotalValue(teamPlayers) {
     if (!teamPlayers || teamPlayers.length === 0) {
         return 0;
     }
@@ -157,24 +161,21 @@ function displayTeams(team1Players, team2Players) {
 
     team1Players.forEach(player => {
         const playerDiv = document.createElement('div');
-        playerDiv.textContent = player.name; // Toont alleen de naam
+        playerDiv.textContent = player.name;
         team1Element.appendChild(playerDiv);
     });
 
     team2Players.forEach(player => {
         const playerDiv = document.createElement('div');
-        playerDiv.textContent = player.name; // Toont alleen de naam
+        playerDiv.textContent = player.name;
         team2Element.appendChild(playerDiv);
     });
 
-    const team1Total = calculateTotalValue(team1Players);
-    const team2Total = calculateTotalValue(team2Players);
-
     const team1Stats = document.createElement('p');
-    team1Stats.innerHTML = `<strong>Aantal spelers:</strong> ${team1Players.length}<br><strong>Totale teamscore:</strong> ${team1Total}`;
+    team1Stats.innerHTML = `<strong>Aantal spelers:</strong> ${team1Players.length}<br><strong>Totale teamscore:</strong> ${totalValueTeam1}`;
     team1Element.appendChild(team1Stats);
 
     const team2Stats = document.createElement('p');
-    team2Stats.innerHTML = `<strong>Aantal spelers:</strong> ${team2Players.length}<br><strong>Totale teamscore:</strong> ${team2Total}`;
+    team2Stats.innerHTML = `<strong>Aantal spelers:</strong> ${team2Players.length}<br><strong>Totale teamscore:</strong> ${totalValueTeam2}`;
     team2Element.appendChild(team2Stats);
 }

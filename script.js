@@ -7,15 +7,13 @@ const clearSelectionButton = document.getElementById('clearSelection');
 
 const players = [
     { name: 'Bart', value: 5, type: 'benchWarmer' },
-    { name: 'Danny', value: 2, type: 'dieHard' },
+    { name: 'Danny', value: 2.5, type: 'dieHard' },
     { name: 'Gita', value: 2, type: 'benchWarmer' },
     { name: 'Henoch', value: 5, type: 'dieHard' },
     { name: 'Jaap', value: 4, type: 'benchWarmer' },
     { name: 'Kevin', value: 4, type: 'benchWarmer' },
     { name: 'Koen', value: 6, type: 'benchWarmer' },
     { name: 'Laureen', value: 2, type: 'dieHard' },
-    { name: 'Lars', value: 2, type: 'dieHard' },
-    { name: 'Leander', value: 2, type: 'dieHard' },
     { name: 'Luc', value: 6, type: 'benchWarmer' },
     { name: 'Marc', value: 5, type: 'dieHard' },
     { name: 'Marije', value: 2, type: 'benchWarmer' },

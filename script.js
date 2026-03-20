@@ -14,9 +14,6 @@ const players = [
     { name: 'Kevin', value: 4, type: 'benchWarmer' },
     { name: 'Koen', value: 6, type: 'benchWarmer' },
     { name: 'Laureen', value: 2, type: 'dieHard' },
-    { name: 'Lars', value: 2, type: 'dieHard' },
-    { name: 'Leander', value: 2, type: 'dieHard' },
-    { name: 'Luc', value: 6, type: 'benchWarmer' },
     { name: 'Marc', value: 5, type: 'dieHard' },
     { name: 'Marije', value: 2, type: 'benchWarmer' },
     { name: 'Mark', value: 5, type: 'dieHard' },
@@ -26,6 +23,7 @@ const players = [
     { name: 'Remco', value: 3, type: 'dieHard' },
     { name: 'Sander', value: 4, type: 'benchWarmer' },
     { name: 'Simon', value: 6, type: 'dieHard' },
+    { name: 'Suze', value: 3, type: 'dieHard' },
     { name: 'Tim', value: 5, type: 'dieHard' },
     { name: 'Tom', value: 4, type: 'benchWarmer' },
 ];

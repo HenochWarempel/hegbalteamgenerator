@@ -114,8 +114,11 @@ function generateFairTeams(players) {
         const CURRENT_TEAM_1 = SHUFFLED_PLAYERS.slice(0, team1Size);
         const CURRENT_TEAM_2 = SHUFFLED_PLAYERS.slice(team1Size);
 
-        const CURRENT_VALUE_1 = calculateTotalValue(CURRENT_TEAM_1);
-        const CURRENT_VALUE_2 = calculateTotalValue(CURRENT_TEAM_2);
+        // Vergelijk gemiddelden zodat teams met een wisselspeler eerlijk worden beoordeeld.
+        // Bij 7 spelers (3+1 wissel vs 3): elke speler in het team van 4 speelt 3/4 van de tijd,
+        // dus de verwachte veldbezetting = gemiddelde van alle 4 — gelijk aan het gemiddelde van team B.
+        const CURRENT_VALUE_1 = calculateAverageValue(CURRENT_TEAM_1);
+        const CURRENT_VALUE_2 = calculateAverageValue(CURRENT_TEAM_2);
         const CURRENT_DIFFERENCE = Math.abs(CURRENT_VALUE_1 - CURRENT_VALUE_2);
 
         if (CURRENT_DIFFERENCE < bestDifference) {
@@ -147,33 +150,52 @@ function shuffleArray(array) {
 }
 
 function calculateTotalValue(teamPlayers) {
-    if (!teamPlayers || teamPlayers.length === 0) {
-        return 0;
-    }
+    if (!teamPlayers || teamPlayers.length === 0) return 0;
     return teamPlayers.reduce((sum, player) => sum + player.value, 0);
 }
 
+function calculateAverageValue(teamPlayers) {
+    if (!teamPlayers || teamPlayers.length === 0) return 0;
+    return calculateTotalValue(teamPlayers) / teamPlayers.length;
+}
+
 function displayTeams(team1Players, team2Players) {
-    team1Element.innerHTML = '<h3>Team Stoep</h3>';
-    team2Element.innerHTML = '<h3>Team Zand</h3>';
+    const hasSubTeam1 = team1Players.length > team2Players.length;
+    const hasSubTeam2 = team2Players.length > team1Players.length;
 
-    team1Players.forEach(player => {
-        const playerDiv = document.createElement('div');
-        playerDiv.textContent = player.name;
-        team1Element.appendChild(playerDiv);
-    });
+    team1Element.innerHTML = `<h3>Team Stoep${hasSubTeam1 ? ' <span class="sub-badge">wisselspeler</span>' : ''}</h3>`;
+    team2Element.innerHTML = `<h3>Team Zand${hasSubTeam2 ? ' <span class="sub-badge">wisselspeler</span>' : ''}</h3>`;
 
-    team2Players.forEach(player => {
-        const playerDiv = document.createElement('div');
-        playerDiv.textContent = player.name;
-        team2Element.appendChild(playerDiv);
-    });
+    function renderPlayers(teamPlayers, hasSubstitute, container) {
+        // De zwakste speler begint op de bank — zo zijn de eerste 3 op het veld
+        // zo sterk mogelijk ten opzichte van het team zonder wissel.
+        const sorted = hasSubstitute
+            ? [...teamPlayers].sort((a, b) => a.value - b.value)
+            : teamPlayers;
+        const subPlayer = hasSubstitute ? sorted[0] : null;
+        const fieldPlayers = hasSubstitute ? sorted.slice(1) : sorted;
+
+        fieldPlayers.forEach(player => {
+            const playerDiv = document.createElement('div');
+            playerDiv.textContent = player.name;
+            container.appendChild(playerDiv);
+        });
+
+        if (subPlayer) {
+            const subDiv = document.createElement('div');
+            subDiv.innerHTML = `<span class="sub-player">⇄ ${subPlayer.name} (wissel)</span>`;
+            container.appendChild(subDiv);
+        }
+    }
+
+    renderPlayers(team1Players, hasSubTeam1, team1Element);
+    renderPlayers(team2Players, hasSubTeam2, team2Element);
 
     const team1Stats = document.createElement('p');
-    team1Stats.innerHTML = `<strong>Aantal spelers:</strong> ${team1Players.length}<br><strong>Totale teamscore:</strong> ${totalValueTeam1}`;
+    team1Stats.innerHTML = `<strong>Spelers op veld:</strong> ${Math.min(team1Players.length, team2Players.length)}<br><strong>Gemiddelde score:</strong> ${totalValueTeam1.toFixed(2)}`;
     team1Element.appendChild(team1Stats);
 
     const team2Stats = document.createElement('p');
-    team2Stats.innerHTML = `<strong>Aantal spelers:</strong> ${team2Players.length}<br><strong>Totale teamscore:</strong> ${totalValueTeam2}`;
+    team2Stats.innerHTML = `<strong>Spelers op veld:</strong> ${Math.min(team1Players.length, team2Players.length)}<br><strong>Gemiddelde score:</strong> ${totalValueTeam2.toFixed(2)}`;
     team2Element.appendChild(team2Stats);
 }
